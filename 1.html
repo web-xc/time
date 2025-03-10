@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网页时钟</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        .box {
+            width: 600px;
+            height: 600px;
+            background: url(./images/1.jpg) 27px 70px no-repeat;
+            /* background: url(./images/1.jpg) 12px 58px no-repeat; */
+            margin: 50px auto;
+            position: relative;
+            border: 12px solid #000;
+            border-radius: 50%;
+            background-color: #e70012;
+        }
+        .hh,
+        .mm,
+        .ss {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            background: url(./images/hour.png) no-repeat center;
+        }
+        .mm {
+            background-image: url(./images/minute.png);
+            transform: rotate(270deg);
+        }
+        .ss {
+            background-image: url(./images/second.png);
+            transform: rotate(30deg);
+        }
+        /* 刻度样式 */
+        .scale {
+            position: absolute;
+            width: 6px;
+            height: 20px;
+            background: #000;
+            left: 50%;
+            /* top: 10px; */
+            transform-origin: center 290px;
+        }
+        .scale.big {
+            height: 30px;
+            background: #000;
+            width: 8px;
+        }
+        /* 数字样式 */
+        .number {
+            position: absolute;
+            font-size: 28px;
+            font-weight: bold;
+            color: #000;
+        }
+        .num-12 {
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .num-3 {
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .num-6 {
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .num-9 {
+            left: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .num-12,
+        .num-9,
+        .num-3,
+        .num-6 {
+            font-size: 40px;
+            font-family: '微软雅黑';
+        }
+        .scale.big, .scale {
+            width: 5px;
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="hh"></div>
+        <div class="mm"></div>
+        <div class="ss"></div>
+        <!-- 添加 12、3、6、9 数字 -->
+        <div class="number num-12">12</div>
+        <div class="number num-3">3</div>
+        <div class="number num-6">6</div>
+        <div class="number num-9">9</div>
+
+        <!-- 创建刻度 -->
+        <script>
+            const box = document.querySelector('.box');
+
+            for (let i = 0; i < 12; i++) {
+                let scale = document.createElement('div');
+                scale.className = 'scale';
+
+                // 12, 3, 6, 9 这些是大刻度
+                if (i % 3 === 0) {
+                    scale.classList.add('big');
+                }
+
+                scale.style.transform = `rotate(${i * 30}deg)`;
+                box.appendChild(scale);
+            }
+
+            let hh = document.querySelector('.hh');
+            let mm = document.querySelector('.mm');
+            let ss = document.querySelector('.ss');
+
+            function fn() {
+                // 1. 获取时分秒
+                let time = new Date();
+                let h = time.getHours();
+                let m = time.getMinutes();
+                let s = time.getSeconds();
+
+                // 2. 计算旋转角度
+                hh.style.transform = `rotate(${h * 30 + m / 60 * 30}deg)`;
+                mm.style.transform = `rotate(${m * 6 + s / 60 * 6}deg)`;
+                ss.style.transform = `rotate(${s * 6}deg)`;
+            }
+
+            // 3. 主动调用一次函数并开启定时器
+            fn();
+            setInterval(fn, 1000);
+        </script>
+    </div>
+</body>
+
+</html>

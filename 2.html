@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>定制时钟</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        .box {
+            width: 600px;
+            height: 600px;
+            margin: 50px auto;
+            position: relative;
+            border: 12px solid #000;
+            border-radius: 50%;
+            background-color: #e70012;
+        }
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom;
+            border-radius: 6px;
+        }
+        .hour {
+            width: 12px;
+            height: 140px;
+            transform: translateX(-50%) rotate(45deg);
+            background: black;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        .minute {
+            width: 8px;
+            height: 180px;
+            transform: translateX(-50%) rotate(320deg);
+            background: black;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        .second {
+            width: 4px;
+            height: 220px;
+            transform: translateX(-50%) rotate(350deg);
+            background: red;
+            box-shadow: 2px 2px 5px rgba(255, 0, 0, 0.5);
+        }
+        .center {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: black;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="hand hour" id="hour"></div>
+        <div class="hand minute" id="minute"></div>
+        <div class="hand second" id="second"></div>
+        <div class="center"></div>
+    </div>
+    <script>
+        function updateClock() {
+            let now = new Date();
+            let h = now.getHours() % 12;
+            let m = now.getMinutes();
+            let s = now.getSeconds();
+            document.getElementById('hour').style.transform = `translateX(-50%) rotate(${h * 30 + m / 2}deg)`;
+            document.getElementById('minute').style.transform = `translateX(-50%) rotate(${m * 6}deg)`;
+            document.getElementById('second').style.transform = `translateX(-50%) rotate(${s * 6}deg)`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>

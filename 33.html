@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球时钟</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: nowrap; /* 确保盒子都在一排 */
+            padding: 0 20px; /* 仅在两侧固定间距 */
+            width: calc(100% - 40px); /* 让内容整体居中 */
+        }
+
+        .container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: #0000002b;
+            border-radius: 10px;
+        }
+
+        .clock {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            border: 8px solid #000;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+            background-position: 8px 45px;
+            background-size: 390px;
+        }
+
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom;
+            background: black;
+            border-radius: 3px;
+        }
+
+        .h {
+            width: 8px;
+            height: 70px;
+            background: black;
+            box-shadow: 4px 0px 7px 1px #0000005c;
+            transform: translateX(-50%) rotate(45deg);
+        }
+
+        .m {
+            width: 6px;
+            height: 84px;
+            background: black;
+            box-shadow: 4px 0px 7px 1px #5b5b5be0;
+            transform: translateX(-50%) rotate(320deg);
+
+        }
+
+        .s {
+            width: 4px;
+            height: 93px;
+            background: red;
+            box-shadow: 4px 0px 7px 1px #5b5b5be0;
+            transform: translateX(-50%) rotate(350deg);
+        }
+
+        .center {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: red;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 4px 0px 7px 1px #0000005c;
+        }
+
+        .scale {
+            position: absolute;
+            width: 3px;
+            height: 30px;
+            background: black;
+            left: 50%;
+            transform-origin: center 140px;
+        }
+
+        .scale.big {
+            width: 3px;
+            height: 30px;
+            background: #000;
+        }
+
+        .number {
+            position: absolute;
+            font-size: 28px;
+            font-weight: bold;
+            color: black;
+        }
+
+        .num-12 {
+            top: 26px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .num-3 {
+            right: 32px;
+            top: 49%;
+            transform: translateY(-50%);
+        }
+
+        .num-6 {
+            bottom: 30px;
+            left: 50.2%;
+            transform: translateX(-50%);
+        }
+
+        .num-9 {
+            left: 38px;
+            top: 49%;
+            transform: translateY(-50%);
+        }
+        .clock_img, img {
+            width: 400px;
+            height: 290px;
+        }
+        /* 固定间距 */
+        .clock_img:first-child {
+            margin-right: 20px;
+            margin-left: -20px; /* 紧贴左侧 */
+        }
+
+        .clock_img:nth-child(3) {
+            margin: 0 20px; /* 左右都有间距 */
+        }
+
+        .clock:last-child {
+            margin-right: 0; /* 紧贴右侧 */
+        }
+        #us {
+            background-position: -78px -5px;
+            background-size: 536px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="clock_img">
+            <img src="./images/3.jpg" alt="">
+        </div>
+        <div class="clock" id="cn" style="background-image: url('data:image/jpeg;base64,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');"></div>
+        <div class="clock_img">
+            <img src="./images/5.jpg" alt="">
+        </div>
+        <div class="clock" id="us"
+            style="background-image: url('data:image/jpeg;base64,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');">
+        </div>
+    </div>
+
+    <script>
+        const timeZones = {
+            cn: 1,  // 中国
+            us: -5, // 美国
+            uk: 0,  // 英国
+            au: 11, // 澳洲
+            fr: 1,  // 法国
+            ca: -5  // 加拿大
+        };
+
+        function createClock(countryId) {
+            let clock = document.getElementById(countryId);
+            let hourHand = document.createElement('div');
+            let minuteHand = document.createElement('div');
+            let secondHand = document.createElement('div');
+            let centerDot = document.createElement('div');
+
+            hourHand.className = 'hand h';
+            minuteHand.className = 'hand m';
+            secondHand.className = 'hand s';
+            centerDot.className = 'center';
+
+            clock.appendChild(hourHand);
+            clock.appendChild(minuteHand);
+            clock.appendChild(secondHand);
+            clock.appendChild(centerDot);
+
+            for (let i = 0; i < 12; i++) {
+                let scale = document.createElement('div');
+                scale.className = 'scale';
+                if (i % 3 === 0) {
+                    scale.classList.add('big');
+                }
+                scale.style.transform = `rotate(${i * 30}deg)`;
+                clock.appendChild(scale);
+            }
+
+            let num12 = document.createElement('div');
+            let num3 = document.createElement('div');
+            let num6 = document.createElement('div');
+            let num9 = document.createElement('div');
+
+            num12.className = 'number num-12';
+            num3.className = 'number num-3';
+            num6.className = 'number num-6';
+            num9.className = 'number num-9';
+
+            num12.innerText = '12';
+            num3.innerText = '3';
+            num6.innerText = '6';
+            num9.innerText = '9';
+
+            clock.appendChild(num12);
+            clock.appendChild(num3);
+            clock.appendChild(num6);
+            clock.appendChild(num9);
+
+            function updateClock() {
+                let now = new Date();
+                let utc = now.getTime() + now.getTimezoneOffset() * 60000;
+                let localTime = new Date(utc + 3600000 * timeZones[countryId]);
+                let h = localTime.getHours() % 12;
+                let m = localTime.getMinutes();
+                let s = localTime.getSeconds();
+
+                hourHand.style.transform = `translateX(-50%) rotate(${h * 30 + m / 2}deg)`;
+                minuteHand.style.transform = `translateX(-50%) rotate(${m * 6}deg)`;
+                secondHand.style.transform = `translateX(-50%) rotate(${s * 6}deg)`;
+            }
+
+            setInterval(updateClock, 1000);
+            updateClock();
+        }
+
+        Object.keys(timeZones).forEach(createClock);
+    </script>
+</body>
+
+</html>

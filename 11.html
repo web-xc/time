@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球时钟</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: nowrap; /* 确保盒子都在一排 */
+            padding: 0 20px; /* 仅在两侧固定间距 */
+            width: calc(100% - 40px); /* 让内容整体居中 */
+        }
+
+        .container::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .container::-webkit-scrollbar-thumb {
+            background: #0000002b;
+            border-radius: 10px;
+        }
+
+        .clock {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            border: 8px solid #000;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+            background-position: 8px 45px;
+            background-size: 390px;
+        }
+
+        .hand {
+            position: absolute;
+            bottom: 50%;
+            left: 50%;
+            transform-origin: bottom;
+            background: black;
+            border-radius: 3px;
+        }
+
+        .h {
+            width: 8px;
+            height: 70px;
+            background: black;
+            box-shadow: 4px 0px 7px 1px #0000005c;
+            transform: translateX(-50%) rotate(45deg);
+        }
+
+        .m {
+            width: 6px;
+            height: 84px;
+            background: black;
+            box-shadow: 4px 0px 7px 1px #5b5b5be0;
+            transform: translateX(-50%) rotate(320deg);
+
+        }
+
+        .s {
+            width: 4px;
+            height: 93px;
+            background: red;
+            box-shadow: 4px 0px 7px 1px #5b5b5be0;
+            transform: translateX(-50%) rotate(350deg);
+        }
+
+        .center {
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            background: red;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 4px 0px 7px 1px #0000005c;
+        }
+
+        .scale {
+            position: absolute;
+            width: 3px;
+            height: 30px;
+            background: black;
+            left: 50%;
+            transform-origin: center 140px;
+        }
+
+        .scale.big {
+            width: 3px;
+            height: 30px;
+            background: #000;
+        }
+
+        .number {
+            position: absolute;
+            font-size: 28px;
+            font-weight: bold;
+            color: black;
+        }
+
+        .num-12 {
+            top: 26px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .num-3 {
+            right: 32px;
+            top: 49%;
+            transform: translateY(-50%);
+        }
+
+        .num-6 {
+            bottom: 30px;
+            left: 50.2%;
+            transform: translateX(-50%);
+        }
+
+        .num-9 {
+            left: 38px;
+            top: 49%;
+            transform: translateY(-50%);
+        }
+        .clock_img, img {
+            width: 400px;
+            height: 290px;
+        }
+        /* 固定间距 */
+        .clock_img:first-child {
+            margin-right: 20px;
+            margin-left: -20px; /* 紧贴左侧 */
+        }
+
+        .clock_img:nth-child(3) {
+            margin: 0 20px; /* 左右都有间距 */
+        }
+
+        .clock:last-child {
+            margin-right: 0; /* 紧贴右侧 */
+        }
+        #us {
+            background-position: -78px -5px;
+            background-size: 536px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="clock_img">
+            <img src="./images/china.jpg" alt="">
+        </div>
+        <div class="clock" id="cn" style="background-image: url('./images/11.png');"></div>
+        <div class="clock_img">
+            <img src="./images/usa.jpg" alt="">
+        </div>
+        <div class="clock" id="us"
+            style="background-image: url('https://tse4-mm.cn.bing.net/th/id/OIP-C.gQl1B2n03YJrmIGuQCwzRQHaD5?w=332&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7');">
+        </div>
+    </div>
+
+    <script>
+        const timeZones = {
+            cn: 8,  // 中国
+            us: -5, // 美国
+            uk: 0,  // 英国
+            au: 11, // 澳洲
+            fr: 1,  // 法国
+            ca: -5  // 加拿大
+        };
+
+        function createClock(countryId) {
+            let clock = document.getElementById(countryId);
+            let hourHand = document.createElement('div');
+            let minuteHand = document.createElement('div');
+            let secondHand = document.createElement('div');
+            let centerDot = document.createElement('div');
+
+            hourHand.className = 'hand h';
+            minuteHand.className = 'hand m';
+            secondHand.className = 'hand s';
+            centerDot.className = 'center';
+
+            clock.appendChild(hourHand);
+            clock.appendChild(minuteHand);
+            clock.appendChild(secondHand);
+            clock.appendChild(centerDot);
+
+            for (let i = 0; i < 12; i++) {
+                let scale = document.createElement('div');
+                scale.className = 'scale';
+                if (i % 3 === 0) {
+                    scale.classList.add('big');
+                }
+                scale.style.transform = `rotate(${i * 30}deg)`;
+                clock.appendChild(scale);
+            }
+
+            let num12 = document.createElement('div');
+            let num3 = document.createElement('div');
+            let num6 = document.createElement('div');
+            let num9 = document.createElement('div');
+
+            num12.className = 'number num-12';
+            num3.className = 'number num-3';
+            num6.className = 'number num-6';
+            num9.className = 'number num-9';
+
+            num12.innerText = '12';
+            num3.innerText = '3';
+            num6.innerText = '6';
+            num9.innerText = '9';
+
+            clock.appendChild(num12);
+            clock.appendChild(num3);
+            clock.appendChild(num6);
+            clock.appendChild(num9);
+
+            function updateClock() {
+                let now = new Date();
+                let utc = now.getTime() + now.getTimezoneOffset() * 60000;
+                let localTime = new Date(utc + 3600000 * timeZones[countryId]);
+                let h = localTime.getHours() % 12;
+                let m = localTime.getMinutes();
+                let s = localTime.getSeconds();
+
+                hourHand.style.transform = `translateX(-50%) rotate(${h * 30 + m / 2}deg)`;
+                minuteHand.style.transform = `translateX(-50%) rotate(${m * 6}deg)`;
+                secondHand.style.transform = `translateX(-50%) rotate(${s * 6}deg)`;
+            }
+
+            setInterval(updateClock, 1000);
+            updateClock();
+        }
+
+        Object.keys(timeZones).forEach(createClock);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球时钟</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: nowrap; /* 确保盒子都在一排 */
+            padding: 0 20px; /* 仅在两侧固定间距 */
+            width: calc(100% - 40px); /* 让内容整体居中 */
+            margin: 0 auto;
+        }
+
+        .clock {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            border: 8px solid #000;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+        }
+
+        .clock_img {
+            width: 400px;
+            height: 290px;
+            flex-shrink: 0;
+        }
+
+        .clock_img img {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 固定间距 */
+        .clock_img:first-child {
+            margin-right: 20px;
+            margin-left: 0; /* 紧贴左侧 */
+        }
+
+        .clock_img:nth-child(3) {
+            margin: 0 20px; /* 左右都有间距 */
+        }
+
+        .clock:last-child {
+            margin-right: 0; /* 紧贴右侧 */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="clock_img">
+            <img src="./images/6.jpg" alt="">
+        </div>
+        <div class="clock" id="cn" style="background-image: url('./images/11.png');"></div>
+        <div class="clock_img">
+            <img src="./images/4.jpg" alt="">
+        </div>
+        <div class="clock" id="us"
+            style="background-image: url('https://tse4-mm.cn.bing.net/th/id/OIP-C.gQl1B2n03YJrmIGuQCwzRQHaD5?w=332&h=180&c=7&r=0&o=5&dpr=1.5&pid=1.7');">
+        </div>
+    </div>
+
+    <script>
+        const timeZones = {
+            cn: 8,  // 中国
+            us: -5, // 美国
+            uk: 0,  // 英国
+            au: 11, // 澳洲
+            fr: 1,  // 法国
+            ca: -5  // 加拿大
+        };
+
+        function createClock(countryId) {
+            let clock = document.getElementById(countryId);
+            let hourHand = document.createElement('div');
+            let minuteHand = document.createElement('div');
+            let secondHand = document.createElement('div');
+            let centerDot = document.createElement('div');
+
+            hourHand.className = 'hand h';
+            minuteHand.className = 'hand m';
+            secondHand.className = 'hand s';
+            centerDot.className = 'center';
+
+            clock.appendChild(hourHand);
+            clock.appendChild(minuteHand);
+            clock.appendChild(secondHand);
+            clock.appendChild(centerDot);
+
+            function updateClock() {
+                let now = new Date();
+                let utc = now.getTime() + now.getTimezoneOffset() * 60000;
+                let localTime = new Date(utc + 3600000 * timeZones[countryId]);
+                let h = localTime.getHours() % 12;
+                let m = localTime.getMinutes();
+                let s = localTime.getSeconds();
+
+                hourHand.style.transform = `translateX(-50%) rotate(${h * 30 + m / 2}deg)`;
+                minuteHand.style.transform = `translateX(-50%) rotate(${m * 6}deg)`;
+                secondHand.style.transform = `translateX(-50%) rotate(${s * 6}deg)`;
+
+                console.log(`${countryId.toUpperCase()} 时间: ${h}:${m}:${s}`);
+            }
+
+            setInterval(updateClock, 1000);
+            updateClock();
+        }
+
+        Object.keys(timeZones).forEach(createClock);
+    </script>
+</body>
+
+</html>
